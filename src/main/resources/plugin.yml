@@ -1,0 +1,12 @@
+name: HallBounties
+version: ${project.version}
+main: net.gabbage.hallbounties.HallBounties
+api-version: 1.13
+authors: [Ginotuch]
+description: Bounties for Hall of Heads
+website: https://gabbage.net
+commands:
+  bounty:
+    description: Master command for the bounties plugin
+    usage: /bounty
+    permission: hallbounties.use
