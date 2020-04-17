@@ -57,6 +57,8 @@ public class Bounty implements CommandExecutor {
             this.config.createSection("bounties", added_bounties);
             this.plugin.saveConfig();
             this.bounties = this.config.getConfigurationSection("bounties");
+
+            sender.sendMessage("§2Successfully added bounty §n" + bountyName + "§r§2 for §6$" + price.toString());
         }
     }
 
@@ -69,10 +71,13 @@ public class Bounty implements CommandExecutor {
             sender.sendMessage("Bounty \"" + claimedBounty + "\" doesn't exist");
         } else {
             ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-            String consolecommand = "economy give " + playerName + " " + this.bounties.getString(claimedBounty);
+            String price = this.bounties.getString(claimedBounty);
+            String consolecommand = "economy give " + playerName + " " + price;
             Bukkit.dispatchCommand(console, consolecommand);
 
             this.removeBounty(claimedBounty);
+            Bukkit.broadcastMessage("§2HallBounties: §r" + payee.getDisplayName() + " been payed §6$" + price + "§r for the bounty §n" + claimedBounty);
+
         }
     }
 
@@ -83,9 +88,9 @@ public class Bounty implements CommandExecutor {
             if (args.length < 1) {
                 sender.sendMessage("Usages:\n /bounty list\n /bounty add <name> <price>\n /bounty pay <player_name>\n /bounty remove <bounty_name>");
             } else if (args[0].toLowerCase().equals("list")) {
-                sender.sendMessage("Bounties:");
+                sender.sendMessage("§2HallBounties:§r");
                 for (String s : this.bounties.getKeys(true)) {
-                    sender.sendMessage("  - " + s + ": " + this.bounties.getString(s));
+                    sender.sendMessage("  - " + s + ": §6$" + this.bounties.getString(s));
                 }
             } else if (args[0].toLowerCase().equals("add")) {
                 if (args.length != 3) {
