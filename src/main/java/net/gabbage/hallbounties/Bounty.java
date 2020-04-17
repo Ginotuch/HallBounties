@@ -44,10 +44,10 @@ public class Bounty implements CommandExecutor {
 
     public void remove(CommandSender sender, String bountyName){
         if (this.deleteBounty(bountyName)){
-            sender.sendMessage("§2Successfully deleted bounty §n" + bountyName);
+            sender.sendMessage("§2HallBounties: §r§2Successfully deleted bounty §n" + bountyName);
         }
         else {
-            sender.sendMessage("§4Bounty §n" + bountyName + "§r§4 doesn't exist!");
+            sender.sendMessage("§2HallBounties: §r§cBounty §n" + bountyName + "§r§c doesn't exist!");
         }
     }
 
@@ -74,17 +74,17 @@ public class Bounty implements CommandExecutor {
             this.plugin.saveConfig();
             this.bounties = this.config.getConfigurationSection("bounties");
 
-            sender.sendMessage("§2Successfully added bounty §n" + bountyName + "§r§2 for §6$" + price.toString());
+            sender.sendMessage("§2HallBounties: §r§2Successfully added bounty §n" + bountyName + "§r§2 for §6$" + price.toString());
         }
     }
 
-    public void pay(CommandSender sender, String playerName, String claimedBounty) {
+    public void pay(CommandSender sender, String claimedBounty, String playerName) {
 
         Player payee = Bukkit.getServer().getPlayer(playerName);
         if (payee == null) {
-            sender.sendMessage("Player \"" + playerName + "\" isn't online or doesn't exist");
+            sender.sendMessage("§2HallBounties: §r§cPlayer \"" + playerName + "\" isn't online or doesn't exist");
         } else if (!this.bounties.contains(claimedBounty)) {
-            sender.sendMessage("Bounty \"" + claimedBounty + "\" doesn't exist");
+            sender.sendMessage("§2HallBounties: §r§cBounty §n" + claimedBounty + " doesn't exist");
         } else {
             ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
             String price = this.bounties.getString(claimedBounty);
@@ -102,7 +102,7 @@ public class Bounty implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender.hasPermission("hallbounties.use")) {
             if (args.length < 1) {
-                sender.sendMessage("Usages:\n /bounty list\n /bounty add <name> <price>\n /bounty pay <player_name>\n /bounty remove <bounty_name>");
+                sender.sendMessage("§2HallBounties: §r\n Usages:\n  /bounty list\n  /bounty add <name> <price>\n  /bounty pay <bounty_name> <player_name>\n  /bounty remove <bounty_name>");
             } else if (args[0].toLowerCase().equals("list")) {
                 sender.sendMessage("§2HallBounties:§r");
                 for (String s : this.bounties.getKeys(true)) {
@@ -110,25 +110,25 @@ public class Bounty implements CommandExecutor {
                 }
             } else if (args[0].toLowerCase().equals("add") && sender.hasPermission("hallbounties.add")) {
                 if (args.length != 3) {
-                    sender.sendMessage("Incorrect argument count.\nUsage: /bounty add <name> <price>");
+                    sender.sendMessage("§2HallBounties: §rIncorrect argument count.\n  Usage: /bounty add <name> <price>");
                 } else {
                     this.add(sender, args[1], args[2]);
                 }
             } else if (args[0].toLowerCase().equals("pay") && sender.hasPermission("hallbounties.pay")) {
                 if (args.length != 3) {
-                    sender.sendMessage("Incorrect argument count.\nUsage: /bounty pay <name> <bounty_name>");
+                    sender.sendMessage("§2HallBounties: §rIncorrect argument count.\n  Usage: /bounty pay <bounty_name> <name>");
                 } else {
                     this.pay(sender, args[1], args[2]);
                 }
             } else if (args[0].toLowerCase().equals("remove") && sender.hasPermission("hallbounties.remove")) {
                 if (args.length != 2) {
-                    sender.sendMessage("Incorrect argument count.\nUsage: /bounty remove <bounty_name>");
+                    sender.sendMessage("§2HallBounties: §rIncorrect argument count.\n  Usage: /bounty remove <bounty_name>");
                 } else {
                     this.remove(sender, args[1]);
                 }
 
             } else {
-                sender.sendMessage("&4You don't have permission to use this &4(You also shouldn't see this message)");
+                sender.sendMessage("§2HallBounties: §r§cYou don't have permission for this");
             }
         }
         return true;
