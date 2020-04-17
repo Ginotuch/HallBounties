@@ -92,13 +92,13 @@ public class Bounty implements CommandExecutor {
                 for (String s : this.bounties.getKeys(true)) {
                     sender.sendMessage("  - " + s + ": §6$" + this.bounties.getString(s));
                 }
-            } else if (args[0].toLowerCase().equals("add")) {
+            } else if (args[0].toLowerCase().equals("add") && sender.hasPermission("hallbounties.add")) {
                 if (args.length != 3) {
                     sender.sendMessage("Incorrect argument count.\nUsage: /bounty add <name> <price>");
                 } else {
                     this.add(sender, args[1], args[2]);
                 }
-            } else if (args[0].toLowerCase().equals("pay")) {
+            } else if (args[0].toLowerCase().equals("pay") && sender.hasPermission("hallbounties.pay")) {
                 if (args.length != 3) {
                     sender.sendMessage("Incorrect argument count.\nUsage: /bounty pay <name> <bounty_name>");
                 } else {
