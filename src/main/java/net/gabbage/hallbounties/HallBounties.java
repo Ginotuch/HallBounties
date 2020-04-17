@@ -10,12 +10,10 @@ public final class HallBounties extends JavaPlugin {
         this.saveDefaultConfig();
         final FileConfiguration config = this.getConfig();
         this.getCommand("bounty").setExecutor(new Bounty(this));
-        // Plugin startup logic
 
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
     }
 }

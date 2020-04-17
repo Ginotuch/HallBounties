@@ -97,7 +97,6 @@ public class Bounty implements CommandExecutor {
         }
     }
 
-    // This method is called, when somebody uses our command
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender.hasPermission("hallbounties.use")) {
