@@ -84,7 +84,7 @@ public class Bounty implements CommandExecutor {
         if (payee == null) {
             sender.sendMessage("§2HallBounties: §r§cPlayer \"" + playerName + "\" isn't online or doesn't exist");
         } else if (!this.bounties.contains(claimedBounty)) {
-            sender.sendMessage("§2HallBounties: §r§cBounty §n" + claimedBounty + " doesn't exist");
+            sender.sendMessage("§2HallBounties: §r§cBounty §n" + claimedBounty + "§r§c doesn't exist");
         } else {
             ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
             String price = this.bounties.getString(claimedBounty);
@@ -92,7 +92,7 @@ public class Bounty implements CommandExecutor {
             Bukkit.dispatchCommand(console, consolecommand);
 
             this.deleteBounty(claimedBounty);
-            Bukkit.broadcastMessage("§2HallBounties: §r" + payee.getDisplayName() + " been payed §6$" + price + "§r for the bounty §n" + claimedBounty);
+            Bukkit.broadcastMessage("§2HallBounties: §r" + payee.getDisplayName() + "§3 been payed §6$" + price + "§r§3 for the bounty §n" + claimedBounty);
 
         }
     }
