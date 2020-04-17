@@ -2,6 +2,7 @@ name: HallBounties
 version: ${project.version}
 main: net.gabbage.hallbounties.HallBounties
 api-version: 1.13
+depend: [Essentials]
 authors: [Ginotuch]
 description: Bounties for Hall of Heads
 website: https://gabbage.net
