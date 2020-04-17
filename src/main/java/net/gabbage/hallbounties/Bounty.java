@@ -23,18 +23,34 @@ public class Bounty implements CommandExecutor {
         bounties = this.config.getConfigurationSection("bounties");
     }
 
-    public void removeBounty(String key) {
-        Map<String, String> updated_bounties = new HashMap<>();
+    public boolean deleteBounty(String key) {
+        if (this.bounties.contains(key)) {
+            Map<String, String> updated_bounties = new HashMap<>();
 
-        for (String bounty : this.bounties.getKeys(true)) {
-            if (!bounty.equals(key)) {
-                updated_bounties.put(bounty, this.bounties.getString(bounty));
+
+            for (String bounty : this.bounties.getKeys(true)) {
+                if (!bounty.equals(key)) {
+                    updated_bounties.put(bounty, this.bounties.getString(bounty));
+                }
             }
+            this.config.createSection("bounties", updated_bounties);
+            this.plugin.saveConfig();
+            this.bounties = this.config.getConfigurationSection("bounties");
+            return true;
+        } else {
+            return false;
         }
-        this.config.createSection("bounties", updated_bounties);
-        this.plugin.saveConfig();
-        this.bounties = this.config.getConfigurationSection("bounties");
     }
+
+    public void remove(CommandSender sender, String bountyName){
+        if (this.deleteBounty(bountyName)){
+            sender.sendMessage("§2Successfully deleted bounty §n" + bountyName);
+        }
+        else {
+            sender.sendMessage("§4Bounty §n" + bountyName + "§r§4 doesn't exist!");
+        }
+    }
+
 
     public void add(CommandSender sender, String bountyName, String bountyPrice) {
         boolean isfloat;
@@ -75,7 +91,7 @@ public class Bounty implements CommandExecutor {
             String consolecommand = "economy give " + playerName + " " + price;
             Bukkit.dispatchCommand(console, consolecommand);
 
-            this.removeBounty(claimedBounty);
+            this.deleteBounty(claimedBounty);
             Bukkit.broadcastMessage("§2HallBounties: §r" + payee.getDisplayName() + " been payed §6$" + price + "§r for the bounty §n" + claimedBounty);
 
         }
@@ -104,10 +120,16 @@ public class Bounty implements CommandExecutor {
                 } else {
                     this.pay(sender, args[1], args[2]);
                 }
-            }
+            } else if (args[0].toLowerCase().equals("remove") && sender.hasPermission("hallbounties.remove")) {
+                if (args.length != 2) {
+                    sender.sendMessage("Incorrect argument count.\nUsage: /bounty remove <bounty_name>");
+                } else {
+                    this.remove(sender, args[1]);
+                }
 
-        } else {
-            sender.sendMessage("&4You don't have permission to use this &4(You also shouldn't see this message)");
+            } else {
+                sender.sendMessage("&4You don't have permission to use this &4(You also shouldn't see this message)");
+            }
         }
         return true;
     }
