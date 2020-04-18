@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class BountyCommandsImpl implements BountyCommands {
     BountyStorage bountyStorage;
@@ -20,9 +22,11 @@ public class BountyCommandsImpl implements BountyCommands {
     public void list(CommandSender sender) {
         sender.sendMessage("§2HallBounties:§r");
         int c = 0;
-        for (Map.Entry<String, HashMap<String, Object>> entry : this.bountyStorage.getBountyList().entrySet()) {
+        Map<String, HashMap<String, Object>> bounties = this.bountyStorage.getBountyList();
+        SortedSet<String> sortedKeys = new TreeSet<>(bounties.keySet());
+        for (String key: sortedKeys) {
             c++;  // haha get it cause it's better than a Sea Bass!
-            sender.sendMessage("  - " + entry.getKey() + ": §6$" + entry.getValue().get("price") + ", amount left: " + entry.getValue().get("amountLeft"));
+            sender.sendMessage("  - " + key + ": §6$" + bounties.get(key).get("price") + ", amount left: " + bounties.get(key).get("amountLeft"));
         }
         if (c == 0){
             sender.sendMessage("  - No bounties active, sorry!");
