@@ -1,6 +1,6 @@
 package net.gabbage.hallbounties;
 
-public class Util{
+public class Util {
     public static boolean isInt(String num) {
         try {
             Integer.parseInt(num);

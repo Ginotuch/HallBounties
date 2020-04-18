@@ -28,8 +28,9 @@ public class BountyStorageImpl implements BountyStorage {
         Bukkit.dispatchCommand(console, consolecommand);
         Integer amountLeft = this.bounties.getConfigurationSection(claimedBounty).getInt("amountLeft") - quantity;
         this.deleteBounty(claimedBounty);
-        if (amountLeft > 0){
-        this.addBounty(claimedBounty, Float.parseFloat(price), amountLeft);}
+        if (amountLeft > 0) {
+            this.addBounty(claimedBounty, Float.parseFloat(price), amountLeft);
+        }
         return amountPayed.toString();
     }
 

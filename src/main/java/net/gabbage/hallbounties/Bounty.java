@@ -11,7 +11,7 @@ public class Bounty implements CommandExecutor {
     public static final String PERMISSION_REMOVE = "hallbounties.remove";
     BountyCommands bountyCommands;
 
-    public Bounty(BountyCommands bountyCommands){
+    public Bounty(BountyCommands bountyCommands) {
         this.bountyCommands = bountyCommands;
     }
 
@@ -34,7 +34,7 @@ public class Bounty implements CommandExecutor {
                 sender.sendMessage("§2HallBounties: §rIncorrect argument count.\n  Usage: /bounty add <name> <price> [quantity]");
             } else {
                 String amount = "1";
-                if (args.length == 4){
+                if (args.length == 4) {
                     amount = args[3];
                 }
                 this.bountyCommands.add(sender, args[1], args[2], amount);
@@ -44,7 +44,7 @@ public class Bounty implements CommandExecutor {
                 sender.sendMessage("§2HallBounties: §rIncorrect argument count.\n  Usage: /bounty pay <bounty_name> <name> [quantity]");
             } else {
                 String amount = "1";
-                if (args.length == 4){
+                if (args.length == 4) {
                     amount = args[3];
                 }
                 this.bountyCommands.pay(sender, args[1], args[2], amount);
