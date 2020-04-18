@@ -57,6 +57,10 @@ public class BountyCommandsImpl implements BountyCommands{
         }
 
         if (isfloat && isInt) {
+            if (amountLeft <=0){
+                sender.sendMessage("Chose a number higher than 0");
+                return;
+            }
             this.bountyStorage.addBounty(bountyName, price, amountLeft);
 
             sender.sendMessage("§2HallBounties: §r§2Successfully added bounty §n" + bountyName + "§r§2 for §6$" + price.toString());
@@ -77,6 +81,11 @@ public class BountyCommandsImpl implements BountyCommands{
         }
 
         if (!isInt){
+            return;
+        }
+
+        if (quantityInt <=0){
+            sender.sendMessage("Chose a number higher than 0");
             return;
         }
 

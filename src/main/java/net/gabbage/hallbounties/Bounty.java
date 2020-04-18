@@ -35,7 +35,7 @@ public class Bounty implements CommandExecutor {
             } else {
                 String amount = "1";
                 if (args.length == 4){
-                    amount = args[2];
+                    amount = args[3];
                 }
                 this.bountyCommands.add(sender, args[1], args[2], amount);
             }
