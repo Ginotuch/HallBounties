@@ -22,7 +22,7 @@ public class Bounty implements CommandExecutor {
             return true;
         }
         if (args.length == 0) {
-            sender.sendMessage("§2HallBounties: §r\n Usages:\n  /bounty list\n  /bounty add <name> <price>\n  /bounty pay <bounty_name> <player_name>\n  /bounty remove <bounty_name>");
+            sender.sendMessage("§2HallBounties: §r\n Usages:\n  /bounty list\n  /bounty add <name> <price> [quantity]\n  /bounty pay <bounty_name> <player_name> [quantity]\n  /bounty remove <bounty_name>");
             return true;
         }
 
@@ -30,16 +30,24 @@ public class Bounty implements CommandExecutor {
         if (subCommand.equalsIgnoreCase("list")) {
             this.bountyCommands.list(sender);
         } else if (subCommand.equalsIgnoreCase("add") && sender.hasPermission(PERMISSION_ADD)) {
-            if (args.length != 3) {
-                sender.sendMessage("§2HallBounties: §rIncorrect argument count.\n  Usage: /bounty add <name> <price>");
+            if (args.length != 3 && args.length != 4) {
+                sender.sendMessage("§2HallBounties: §rIncorrect argument count.\n  Usage: /bounty add <name> <price> [quantity]");
             } else {
-                this.bountyCommands.add(sender, args[1], args[2]);
+                String amount = "1";
+                if (args.length == 4){
+                    amount = args[2];
+                }
+                this.bountyCommands.add(sender, args[1], args[2], amount);
             }
         } else if (subCommand.equalsIgnoreCase("pay") && sender.hasPermission(PERMISSION_PAY)) {
-            if (args.length != 3) {
-                sender.sendMessage("§2HallBounties: §rIncorrect argument count.\n  Usage: /bounty pay <bounty_name> <name>");
+            if (args.length != 3 && args.length != 4) {
+                sender.sendMessage("§2HallBounties: §rIncorrect argument count.\n  Usage: /bounty pay <bounty_name> <name> [quantity]");
             } else {
-                this.bountyCommands.pay(sender, args[1], args[2]);
+                String amount = "1";
+                if (args.length == 4){
+                    amount = args[3];
+                }
+                this.bountyCommands.pay(sender, args[1], args[2], amount);
             }
         } else if (subCommand.equalsIgnoreCase("remove") && sender.hasPermission(PERMISSION_REMOVE)) {
             if (args.length != 2) {

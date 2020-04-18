@@ -7,7 +7,7 @@ public interface BountyCommands {
 
     void remove(CommandSender sender, String bountyName);
 
-    void add(CommandSender sender, String bountyName, String bountyPrice);
+    void add(CommandSender sender, String bountyName, String bountyPrice, String quantity);
 
-    void pay(CommandSender sender, String claimedBounty, String playerName);
+    void pay(CommandSender sender, String claimedBounty, String playerName, String quantity);
 }

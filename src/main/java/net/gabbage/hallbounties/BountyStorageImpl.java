@@ -13,36 +13,40 @@ public class BountyStorageImpl implements BountyStorage {
     FileConfiguration config;
     ConfigurationSection bounties;
 
-    public BountyStorageImpl(HallBounties hallBounties){
+    public BountyStorageImpl(HallBounties hallBounties) {
         this.plugin = hallBounties;
         this.config = this.plugin.getConfig();
         this.bounties = this.config.getConfigurationSection("bounties");
     }
 
     @Override
-    public String payPlayer(String playerName, String claimedBounty) {
+    public String payPlayer(String playerName, String claimedBounty, Integer quantity) {
         ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-        String price = this.bounties.getString(claimedBounty);
-        String consolecommand = "economy give " + playerName + " " + price;
+        String price = this.bounties.getConfigurationSection(claimedBounty).getString("price");
+        Float amountPayed = (Float.parseFloat(price) * quantity);
+        String consolecommand = "economy give " + playerName + " " + amountPayed;
         Bukkit.dispatchCommand(console, consolecommand);
+        Integer amountLeft = this.bounties.getConfigurationSection(claimedBounty).getInt("amountLeft") - quantity;
         this.deleteBounty(claimedBounty);
-        return price;
+        if (amountLeft > 0){
+        this.addBounty(claimedBounty, Float.parseFloat(price), amountLeft);}
+        return amountPayed.toString();
     }
 
     @Override
     public boolean bountyExists(String bountyName) {
-        return this.bounties.contains(bountyName);
+        return this.bounties.contains(bountyName, true);
     }
 
     @Override
-    public void addBounty(String bountyName, Float bountyPrice) {
-        Map<String, String> added_bounties = new HashMap<>();
+    public void addBounty(String bountyName, Float bountyPrice, Integer amountLeft) {
+        Map<String, HashMap<String, Object>> added_bounties = this.getBountyList();
 
-        for (String bounty : this.bounties.getKeys(true)) {
-            added_bounties.put(bounty, this.bounties.getString(bounty));
-        }
+        HashMap<String, Object> newBounty = new HashMap<>();
+        newBounty.put("price", bountyPrice);
+        newBounty.put("amountLeft", amountLeft);
 
-        added_bounties.put(bountyName, bountyPrice.toString());
+        added_bounties.put(bountyName, newBounty);
         this.config.createSection("bounties", added_bounties);
         this.plugin.saveConfig();
         this.bounties = this.config.getConfigurationSection("bounties");
@@ -53,14 +57,8 @@ public class BountyStorageImpl implements BountyStorage {
         if (!this.bounties.contains(key, true)) {
             return false;
         }
-        Map<String, String> updated_bounties = new HashMap<>();
-
-
-        for (String bounty : this.bounties.getKeys(true)) {
-            if (!bounty.equals(key)) {
-                updated_bounties.put(bounty, this.bounties.getString(bounty));
-            }
-        }
+        Map<String, HashMap<String, Object>> updated_bounties = this.getBountyList();
+        updated_bounties.remove(key);
         this.config.createSection("bounties", updated_bounties);
         this.plugin.saveConfig();
         this.bounties = this.config.getConfigurationSection("bounties");
@@ -68,10 +66,18 @@ public class BountyStorageImpl implements BountyStorage {
     }
 
     @Override
-    public Map<String, String> getBountyList() {
-        Map<String, String> bountyList = new HashMap<>();
-        for (String s : this.bounties.getKeys(true)){
-            bountyList.put(s, this.bounties.getString(s));
+    public int bountyAmountLeft(String bountyName) {
+        return this.bounties.getConfigurationSection(bountyName).getInt("amountLeft");
+    }
+
+    @Override
+    public Map<String, HashMap<String, Object>> getBountyList() {
+        Map<String, HashMap<String, Object>> bountyList = new HashMap<>();
+        for (String bountyName : this.bounties.getKeys(false)) {
+            HashMap<String, Object> bounty = new HashMap<>();
+            bounty.put("price", Float.parseFloat(this.bounties.getConfigurationSection(bountyName).getString("price")));
+            bounty.put("amountLeft", this.bounties.getConfigurationSection(bountyName).getInt("amountLeft"));
+            bountyList.put(bountyName, bounty);
         }
         return bountyList;
     }
