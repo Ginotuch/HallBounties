@@ -7,14 +7,13 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BountyCommandsImpl implements BountyCommands{
+public class BountyCommandsImpl implements BountyCommands {
     BountyStorage bountyStorage;
 
     public BountyCommandsImpl(BountyStorage bountyStorage) {
         this.bountyStorage = bountyStorage;
 
     }
-
 
 
     @Override
@@ -36,56 +35,42 @@ public class BountyCommandsImpl implements BountyCommands{
 
     @Override
     public void add(CommandSender sender, String bountyName, String bountyPrice, String quantity) {
-        boolean isfloat;
-        Float price = null;
-        try {
-            price = Float.parseFloat(bountyPrice);
-            isfloat = true;
-        } catch (NumberFormatException e) {
-            isfloat = false;
-            sender.sendMessage(bountyPrice + " cannot be read as a number");
-        }
-
-        boolean isInt;
-        Integer amountLeft = null;
-        try {
-            amountLeft = Integer.parseInt(quantity);
-            isInt = true;
-        } catch (NumberFormatException e) {
-            isInt = false;
-            sender.sendMessage(quantity + " cannot be read as a number");
-        }
-
-        if (isfloat && isInt) {
-            if (amountLeft <=0){
-                sender.sendMessage("Chose a number higher than 0");
-                return;
+        boolean isInt = Util.isInt(quantity);
+        boolean isFloat = Util.isFloat(bountyPrice);
+        if (!(isInt && isFloat)) {
+            if (!isInt) {
+                sender.sendMessage("§2HallBounties: §r§c " + quantity + " cannot be read as a number");
             }
-            this.bountyStorage.addBounty(bountyName, price, amountLeft);
-
-            sender.sendMessage("§2HallBounties: §r§2Successfully added bounty §n" + bountyName + "§r§2 for §6$" + price.toString());
+            if (!isFloat) {
+                sender.sendMessage("§2HallBounties: §r§c " + bountyPrice + " cannot be read as a number");
+            }
+            return;
         }
+
+        Float price = Float.parseFloat(bountyPrice);
+        int amountLeft = Integer.parseInt(quantity);
+
+        if (amountLeft <= 0) {
+            sender.sendMessage("§2HallBounties: §r§cChose a number higher than 0");
+            return;
+        }
+        this.bountyStorage.addBounty(bountyName, price, amountLeft);
+
+        sender.sendMessage("§2HallBounties: §r§2Successfully added bounty §n" + bountyName + "§r§2 for §6$" + price);
+
     }
 
     @Override
     public void pay(CommandSender sender, String claimedBounty, String playerName, String quantity) {
 
-        boolean isInt;
-        Integer quantityInt = null;
-        try {
-            quantityInt = Integer.parseInt(quantity);
-            isInt = true;
-        } catch (NumberFormatException e) {
-            isInt = false;
-            sender.sendMessage(quantity + " cannot be read as a number");
-        }
-
-        if (!isInt){
+        if (!Util.isInt(quantity)) {
+            sender.sendMessage("§2HallBounties: §r§c " + quantity + " cannot be read as a number");
             return;
         }
+        int quantityInt = Integer.parseInt(quantity);
 
-        if (quantityInt <=0){
-            sender.sendMessage("Chose a number higher than 0");
+        if (quantityInt <= 0) {
+            sender.sendMessage("§2HallBounties: §r§cChose a number higher than 0");
             return;
         }
 
@@ -95,10 +80,9 @@ public class BountyCommandsImpl implements BountyCommands{
             sender.sendMessage("§2HallBounties: §r§cPlayer \"" + playerName + "\" isn't online or doesn't exist");
         } else if (!this.bountyStorage.bountyExists(claimedBounty)) {
             sender.sendMessage("§2HallBounties: §r§cBounty §n" + claimedBounty + "§r§c doesn't exist");
-        } else if ((amountLeft = this.bountyStorage.bountyAmountLeft(claimedBounty)) < quantityInt){
+        } else if ((amountLeft = this.bountyStorage.bountyAmountLeft(claimedBounty)) < quantityInt) {
             sender.sendMessage("§2HallBounties: §r§cBounty §n" + claimedBounty + "§r§c only has " + amountLeft + " claims left");
-        }
-        else {
+        } else {
             String price = this.bountyStorage.payPlayer(playerName, claimedBounty, quantityInt);
             Bukkit.broadcastMessage("§2HallBounties: §r" + payee.getDisplayName() + "§3 been payed §6$" + price + "§r§3 for the bounty §n" + claimedBounty);
 
