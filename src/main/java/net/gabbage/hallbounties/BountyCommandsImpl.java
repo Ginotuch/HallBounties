@@ -19,8 +19,13 @@ public class BountyCommandsImpl implements BountyCommands {
     @Override
     public void list(CommandSender sender) {
         sender.sendMessage("§2HallBounties:§r");
+        int c = 0;
         for (Map.Entry<String, HashMap<String, Object>> entry : this.bountyStorage.getBountyList().entrySet()) {
+            c++;  // haha get it cause it's better than a Sea Bass!
             sender.sendMessage("  - " + entry.getKey() + ": §6$" + entry.getValue().get("price") + ", amount left: " + entry.getValue().get("amountLeft"));
+        }
+        if (c == 0){
+            sender.sendMessage("  - No bounties active, sorry!");
         }
     }
 
