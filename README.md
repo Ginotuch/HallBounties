@@ -7,6 +7,12 @@ This plugin has been written specifically for the Hall of Heads in the [Gabbage]
 * `/bounty pay <bounty_name> <player_name> [quantity]` pays a player for the bounty, and the specified amount (will multiply price). `[quantity]` is optional.
 * `/bounty remove <bounty_name>` will remove a bounty.
 
+## Permissions
+* `hallbounties.use` lets you use `/bounty list`
+* `hallbounties.add` lets you add bounties `/bounty add`
+* `hallbounties.pay` lets you pay someone for a bounty `/bounty pay`
+* `hallbounties.remove` lets you remove a bounty from the list `/bounty remove`
+
 ## Todo
 * Add logging
 * Better message system
